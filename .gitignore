@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Checkpoints and weights (never commit models)
+checkpoints/
+*.pt
+*.pth
+
+# Data files (questions, features, answers, vocab)
+data/*.json
+data/*.pt
+features.pt
+answers.json
+vocab.json
+
+# Virtual environment & IDE
+.env
+.venv
+env/
+venv/
+.idea/
+.vscode/
+.DS_Store
+
