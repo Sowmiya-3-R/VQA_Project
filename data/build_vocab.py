@@ -49,12 +49,12 @@ def extract_question_and_answer(item: Dict[str, Any]) -> Tuple[str, str]:
         or ""
     )
 
-    # 2. Extract answer text
+    # 2. Extract answer text (Use multiple_choice_answer as primary per VQA v2 spec)
     answer_text = ""
-    if "answer" in item and isinstance(item["answer"], str):
-        answer_text = item["answer"]
-    elif "multiple_choice_answer" in item and isinstance(item["multiple_choice_answer"], str):
+    if "multiple_choice_answer" in item and isinstance(item["multiple_choice_answer"], str):
         answer_text = item["multiple_choice_answer"]
+    elif "answer" in item and isinstance(item["answer"], str):
+        answer_text = item["answer"]
     elif "answers" in item:
         # If list of annotator answers (e.g. VQA v2 annotations)
         raw_answers = item["answers"]

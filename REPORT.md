@@ -127,8 +127,19 @@ Because VQA is cast as a 3000-way classification problem, samples whose answers 
   $$\mathcal{L} = -\sum_{c=1}^{3000} y_c \log \left(\frac{e^{\hat{y}_c}}{\sum_{j=1}^{3000} e^{\hat{y}_j}}\right)$$
 - **Optimizer**: Adam ($\beta_1=0.9, \beta_2=0.999$, $\text{lr}=10^{-3}$).
 - **Batch Size**: 64.
-- **Early Stopping**: Monitored on validation accuracy with `patience=3` epochs to avoid overfitting.
+- **Early Stopping**: Monitored on validation VQA accuracy with `patience=3` epochs to avoid overfitting.
 - **Checkpointing**: Every epoch is checkpointed, with `best_model.pt` automatically preserved.
+
+### 5.4 Official VQA Evaluation Metric (10 Annotators)
+For evaluation, naive exact match against a single ground truth is replaced by the official VQA competition accuracy metric across all 10 human annotators:
+$$\text{Accuracy}_{\text{VQA}} = \min\left(\frac{\sum_{i=1}^{10} \mathbb{I}(\hat{a} = a_i)}{3}, 1.0\right)$$
+where $\hat{a}$ is the predicted answer string and $\{a_1, \dots, a_{10}\}$ are the 10 human annotations.
+
+**Per-Answer-Type Breakdown**:
+Accuracy is tracked and reported across standard question categories:
+- **Yes/No**: Binary affirmation/negation questions.
+- **Number**: Quantitative counting questions.
+- **Other**: Open-ended attribute, object, and color queries.
 
 ---
 
@@ -157,26 +168,36 @@ python3 data/build_vocab.py --fake
 python3 train.py --fake --limit 200
 ```
 
-### 7.2 Real Training on Google Colab
-On Google Colab, mount Google Drive so large feature files and model checkpoints persist outside the ephemeral virtual machine:
+### 7.2 Real Training on Google Colab with Official VQA v2 Data
+Google Drive path: `MyDrive/VQA Project/dataset/`
+
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
 
-# Step 1: Generate vocabulary and answer set
-!python data/build_vocab.py --questions /content/drive/MyDrive/VQA/questions.json \
-                           --vocab_out /content/drive/MyDrive/VQA/vocab.json \
-                           --answers_out /content/drive/MyDrive/VQA/answers.json
+DRIVE_DIR = "/content/drive/MyDrive/VQA Project"
 
-# Step 2: Train VQA Model
-!python train.py --questions /content/drive/MyDrive/VQA/questions.json \
-                --features /content/drive/MyDrive/VQA/features.pt \
-                --vocab /content/drive/MyDrive/VQA/vocab.json \
-                --answers /content/drive/MyDrive/VQA/answers.json \
-                --checkpoint_dir /content/drive/MyDrive/VQA/checkpoints \
-                --batch_size 64 \
-                --epochs 15 \
-                --lr 0.001
+# Step 1: Generate vocabulary & answers from official train files
+!python data/build_vocab.py \
+    --questions "$DRIVE_DIR/dataset/v2_OpenEnded_mscoco_train2014_questions.json" \
+    --annotations "$DRIVE_DIR/dataset/v2_mscoco_train2014_annotations.json" \
+    --vocab_out "$DRIVE_DIR/vocab.json" \
+    --answers_out "$DRIVE_DIR/answers.json"
+
+# Step 2: Train with disjoint image split or separate val2014
+!python train.py \
+    --questions "$DRIVE_DIR/dataset/v2_OpenEnded_mscoco_train2014_questions.json" \
+    --annotations "$DRIVE_DIR/dataset/v2_mscoco_train2014_annotations.json" \
+    --features "$DRIVE_DIR/features.pt" \
+    --val_questions "$DRIVE_DIR/dataset/v2_OpenEnded_mscoco_val2014_questions.json" \
+    --val_annotations "$DRIVE_DIR/dataset/v2_mscoco_val2014_annotations.json" \
+    --vocab "$DRIVE_DIR/vocab.json" \
+    --answers "$DRIVE_DIR/answers.json" \
+    --checkpoint_dir "$DRIVE_DIR/checkpoints" \
+    --limit_images 5000 \
+    --batch_size 64 \
+    --epochs 15 \
+    --lr 0.001
 ```
 
 ---
@@ -194,3 +215,4 @@ drive.mount('/content/drive')
 
 4. **Q: Why is early stopping based on validation accuracy rather than validation loss?**  
    *A*: In highly multi-class problems with a long-tailed answer distribution, cross-entropy loss can fluctuate due to uncalibrated overconfident probability tails, whereas classification accuracy directly measures top-1 exact match, which is the primary evaluation metric.
+
