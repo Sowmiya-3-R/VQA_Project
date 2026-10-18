@@ -1,2 +1,2 @@
 # VQA_Project
-Building vision question and answer model using deep learning model
+Building vision question and answer model using deep learning framework
