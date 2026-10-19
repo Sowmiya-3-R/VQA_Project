@@ -74,8 +74,10 @@ python train.py --fake --limit 200
 - Generates synthetic 2048-d image features and question-answer pairs in-memory.
 - Performs disjoint image splitting, forward/backward passes, metric calculation, early stopping, and checkpoint saving.
 
+#### Full Training on Real Features
 #### Full Training on Official VQA v2 Data
 ```bash
+python train.py --questions data/questions.json \
 python train.py --questions dataset/v2_OpenEnded_mscoco_train2014_questions.json \
                 --annotations dataset/v2_mscoco_train2014_annotations.json \
                 --features features.pt \
@@ -91,12 +93,16 @@ python train.py --questions dataset/v2_OpenEnded_mscoco_train2014_questions.json
                 --patience 3
 ```
 
+#### Quick Test on Real Data (`--limit N`)
+To train on a small subset (e.g. 100 samples) to verify end-to-end data loading:
 #### Quick Test on Real Data
 To train on only $N$ training images (e.g. 100 images, keeping all their questions):
 ```bash
+python train.py --questions data/questions.json \
 python train.py --questions dataset/v2_OpenEnded_mscoco_train2014_questions.json \
                 --annotations dataset/v2_mscoco_train2014_annotations.json \
                 --features features.pt \
+                --limit 100
                 --limit_images 100
 ```
 
@@ -104,12 +110,19 @@ python train.py --questions dataset/v2_OpenEnded_mscoco_train2014_questions.json
 
 ## 4. Google Colab / Google Drive Checkpoint Storage
 
+Checkpoints and large data files should never be committed inside the Git repository. On Google Colab, mount Google Drive and set the paths accordingly:
 Checkpoints and large data files should never be committed inside the Git repository. On Google Colab, mount Google Drive and run with paths pointing to `VQA Project/`:
 
 ```python
 from google.colab import drive
 drive.mount('/content/drive')
 
+# Run training pointing checkpoints to Drive:
+!python train.py --questions /content/drive/MyDrive/VQA/questions.json \
+                 --features /content/drive/MyDrive/VQA/features.pt \
+                 --vocab /content/drive/MyDrive/VQA/vocab.json \
+                 --answers /content/drive/MyDrive/VQA/answers.json \
+                 --checkpoint_dir /content/drive/MyDrive/VQA/checkpoints
 DRIVE_DIR = "/content/drive/MyDrive/VQA Project"
 
 # Run training pointing checkpoints and dataset to Drive:

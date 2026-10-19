@@ -127,6 +127,7 @@ Because VQA is cast as a 3000-way classification problem, samples whose answers 
   $$\mathcal{L} = -\sum_{c=1}^{3000} y_c \log \left(\frac{e^{\hat{y}_c}}{\sum_{j=1}^{3000} e^{\hat{y}_j}}\right)$$
 - **Optimizer**: Adam ($\beta_1=0.9, \beta_2=0.999$, $\text{lr}=10^{-3}$).
 - **Batch Size**: 64.
+- **Early Stopping**: Monitored on validation accuracy with `patience=3` epochs to avoid overfitting.
 - **Early Stopping**: Monitored on validation VQA accuracy with `patience=3` epochs to avoid overfitting.
 - **Checkpointing**: Every epoch is checkpointed, with `best_model.pt` automatically preserved.
 
@@ -168,6 +169,8 @@ python3 data/build_vocab.py --fake
 python3 train.py --fake --limit 200
 ```
 
+### 7.2 Real Training on Google Colab
+On Google Colab, mount Google Drive so large feature files and model checkpoints persist outside the ephemeral virtual machine:
 ### 7.2 Real Training on Google Colab with Official VQA v2 Data
 Google Drive path: `MyDrive/VQA Project/dataset/`
 
@@ -175,8 +178,21 @@ Google Drive path: `MyDrive/VQA Project/dataset/`
 from google.colab import drive
 drive.mount('/content/drive')
 
+# Step 1: Generate vocabulary and answer set
+!python data/build_vocab.py --questions /content/drive/MyDrive/VQA/questions.json \
+                           --vocab_out /content/drive/MyDrive/VQA/vocab.json \
+                           --answers_out /content/drive/MyDrive/VQA/answers.json
 DRIVE_DIR = "/content/drive/MyDrive/VQA Project"
 
+# Step 2: Train VQA Model
+!python train.py --questions /content/drive/MyDrive/VQA/questions.json \
+                --features /content/drive/MyDrive/VQA/features.pt \
+                --vocab /content/drive/MyDrive/VQA/vocab.json \
+                --answers /content/drive/MyDrive/VQA/answers.json \
+                --checkpoint_dir /content/drive/MyDrive/VQA/checkpoints \
+                --batch_size 64 \
+                --epochs 15 \
+                --lr 0.001
 # Step 1: Generate vocabulary & answers from official train files
 !python data/build_vocab.py \
     --questions "$DRIVE_DIR/dataset/v2_OpenEnded_mscoco_train2014_questions.json" \
