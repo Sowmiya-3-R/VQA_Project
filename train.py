@@ -128,7 +128,7 @@ class VQADataset(Dataset):
         """
         Args:
             samples: List of dicts, each with keys 'image', 'question', 'label'.
-            features_dict: Dict mapping image identifiers to [2048] feature tensors.
+            features_dict: Dict mapping image identifiers to [1024] feature tensors.
             vocab: Mapping of word string -> token ID.
             max_len: Fixed sequence length for question tokens.
         """
@@ -422,7 +422,7 @@ def generate_fake_data(
     image_names = [f"fake_img_{i}.jpg" for i in range(num_images)]
     image_names = [f"COCO_train2014_{i:012d}.jpg" for i in range(num_images)]
     for img_name in image_names:
-        features_dict[img_name] = torch.randn(2048, dtype=torch.float32)
+        features_dict[img_name] = torch.randn(1024, dtype=torch.float32)
 
     # 4. Synthesize questions distributed across these images
     # 4. Synthesize questions distributed across images with 10 annotators each
@@ -630,7 +630,7 @@ def train_model(config: Dict[str, Any]):
     # -------------------------------------------------------------------------
     model = VQAModel(
         vocab_size=len(vocab),
-        image_dim=2048,
+        image_dim=1024,
         text_dim=1024,
         num_classes=len(answers),
         dropout_prob=config["dropout"]

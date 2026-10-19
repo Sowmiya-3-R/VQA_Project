@@ -5,7 +5,7 @@ Contract verification:
 1. QuestionEncoder:
    Input [B, 20] LongTensor -> Output [B, 1024] FloatTensor
 2. VQAModel:
-   Image features [B, 2048] FloatTensor + Question tokens [B, 20] LongTensor -> Output [B, 3000] FloatTensor
+   Image features [B, 1024] FloatTensor + Question tokens [B, 20] LongTensor -> Output [B, 3000] FloatTensor
 3. Tokenizer:
    Input question string -> Output [20] LongTensor with padding and unknown tokens handled.
 """
@@ -32,7 +32,7 @@ class TestVQAShapes(unittest.TestCase):
         self.batch_size = 8
         self.seq_len = 20
         self.vocab_size = 500
-        self.image_dim = 2048
+        self.image_dim = 1024
         self.hidden_dim = 1024
         self.num_classes = 3000
 
@@ -117,7 +117,7 @@ class TestVQAShapes(unittest.TestCase):
     def test_vqa_model_shape(self):
         """
         Tests VQAModel forward pass:
-        Input: image_features [B, 2048], question_ids [B, 20] -> Output: [B, 3000]
+        Input: image_features [B, 1024], question_ids [B, 20] -> Output: [B, 3000]
         """
         model = VQAModel(
             vocab_size=self.vocab_size,
@@ -128,7 +128,7 @@ class TestVQAShapes(unittest.TestCase):
         )
         model.eval()
 
-        # Dummy pooled ResNet-50 features: [8, 2048]
+        # Dummy pooled ResNet-50 features: [8, 1024]
         dummy_image_features = torch.randn(self.batch_size, self.image_dim, dtype=torch.float32)
 
         # Dummy question token IDs: [8, 20]
