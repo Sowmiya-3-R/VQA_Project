@@ -528,6 +528,9 @@ def train_model(config: Dict[str, Any]):
             if config["val_features_path"]:
                 print(f"Loading validation image features from: {config['val_features_path']}")
                 val_features_dict = torch.load(config["val_features_path"], map_location="cpu")
+                if "features" in val_features_dict and "image_names" in val_features_dict:
+                    val_feats = val_features_dict["features"]
+                    val_features_dict = {n: val_feats[i] for i, n in enumerate(val_features_dict["image_names"])}
             else:
                 val_features_dict = features_dict
         else:
