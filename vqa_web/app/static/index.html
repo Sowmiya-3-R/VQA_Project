@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VisionQA — ask thoughtful questions about any image." />
+    <title>VisionQA — See more in every image</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href="/" aria-label="VisionQA home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>vision<span class="brand-accent">qa</span></span>
+        </a>
+        <p class="header-note">A quieter way to look closer.</p>
+      </div>
+    </header>
+
+    <main id="main-content" class="shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="eyebrow"><span class="eyebrow-line"></span> Visual question answering</div>
+        <h1 id="page-title">See more in<br /><em>every image.</em></h1>
+        <p class="intro-copy">Share a photograph, ask a question, and let VisionQA help you notice the details that matter.</p>
+      </section>
+
+      <section class="workspace" aria-label="VisionQA workspace">
+        <div class="workspace-main">
+          <form id="vision-form" novalidate>
+            <div class="section-heading">
+              <div>
+                <span class="step-number">01</span>
+                <h2>Choose an image</h2>
+              </div>
+              <span class="section-hint">JPG, PNG or WEBP · 10MB max</span>
+            </div>
+
+            <div id="drop-zone" class="drop-zone" tabindex="0" role="button" aria-controls="image-input" aria-label="Choose an image to analyze">
+              <input id="image-input" class="visually-hidden" type="file" accept="image/jpeg,image/png,image/webp" />
+              <div id="empty-upload" class="upload-empty">
+                <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 21V5m0 0 6 6m-6-6-6 6M7 19v5a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <strong>Drop an image here</strong>
+                <span>or <button id="browse-button" type="button" class="text-button">browse your files</button></span>
+              </div>
+              <div id="image-preview-wrap" class="image-preview-wrap" hidden>
+                <img id="image-preview" alt="Selected image preview" />
+                <div class="image-overlay"><span id="image-file-name"></span><button id="remove-image" type="button" class="remove-button">Remove image</button></div>
+              </div>
+            </div>
+            <p id="file-error" class="field-error" role="alert" hidden></p>
+
+            <div class="section-heading question-heading">
+              <div>
+                <span class="step-number">02</span>
+                <h2>Ask a question</h2>
+              </div>
+              <span id="question-count" class="section-hint">0 / 240</span>
+            </div>
+            <label class="visually-hidden" for="question">Your question about the image</label>
+            <textarea id="question" maxlength="240" rows="2" placeholder="What would you like to know about this image?"></textarea>
+            <p id="question-error" class="field-error" role="alert" hidden>Please add a question before continuing.</p>
+
+            <div class="form-actions">
+              <button id="analyze-button" class="primary-button" type="submit"><span id="button-label">Analyze image</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+              <span class="privacy-note"><span class="lock-icon" aria-hidden="true">⌑</span> Your image stays in this session.</span>
+            </div>
+          </form>
+        </div>
+
+        <aside class="result-panel" aria-live="polite" aria-atomic="true">
+          <div class="result-topline"><span>YOUR ANSWER</span><span class="result-dot"></span></div>
+          <div id="result-empty" class="result-empty">
+            <div class="result-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p>Your answer will appear here.</p>
+            <small>Upload an image and ask a question to begin.</small>
+          </div>
+          <div id="result-loading" class="result-state" hidden>
+            <div class="loading-ring" aria-hidden="true"></div>
+            <p>Looking closer<span class="loading-dots">...</span></p>
+            <small>Finding the details in your image.</small>
+          </div>
+          <div id="result-success" class="result-success" hidden>
+            <span class="answer-label">VisionQA says</span>
+            <p id="answer-text" class="answer-text"></p>
+            <div class="confidence-block">
+              <div class="confidence-header"><span>Confidence</span><strong id="confidence-value">—</strong></div>
+              <div class="confidence-track"><span id="confidence-bar"></span></div>
+            </div>
+            <p class="result-meta">Baseline model: answers come from the 3,000 most common ones, and counting or fine detail is often wrong.</p>
+            <button id="new-question" class="secondary-button" type="button">Ask another question <span aria-hidden="true">↗</span></button>
+          </div>
+          <div id="result-error" class="result-state error-state" hidden>
+            <div class="error-icon" aria-hidden="true">!</div>
+            <p>We couldn't process that.</p>
+            <small>Check your image and question, then try again.</small>
+          </div>
+        </aside>
+      </section>
+
+      <section class="examples" aria-labelledby="examples-title">
+        <div class="examples-heading"><span class="eyebrow-line"></span><h2 id="examples-title">Start with a thought</h2></div>
+        <div class="example-list">
+          <button type="button" class="example-chip" data-question="Is there a person in the picture?">Is there a person in the picture? <span aria-hidden="true">↗</span></button>
+          <button type="button" class="example-chip" data-question="What color is the shirt?">What color is the shirt? <span aria-hidden="true">↗</span></button>
+          <button type="button" class="example-chip" data-question="How many people are there?">How many people are there? <span aria-hidden="true">↗</span></button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer shell"><span>VisionQA</span><span>Look closer. Ask better questions.</span></footer>
+    <div id="status-message" class="visually-hidden" role="status"></div>
+    <script src="/script.js" defer></script>
+  </body>
+</html>
