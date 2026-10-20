@@ -16,12 +16,13 @@ All numbers below are copied from the training logs. Nothing is estimated.
 - Time per epoch: 2-3 seconds
 
 | Epoch     | Train loss | Val loss | Val accuracy | Yes/No | Number | Other |
-| 4.9938	| 4.7167	 | 20.30%	| 25.77%	   | 64.29%	| 0.00%	 | 0.83%.| 
-| 4.5832	| 4.7016	 | 20.67%	| 25.63%	   | 63.93%	| 0.22%	 | 0.76% | 
-| 4.4763	| 4.6836	 | 21.31%	| 26.46%	   | 65.85%	| 0.11%	 | 0.96% | 
-| 4.1575	| 3.9755	 | 21.45%	| 26.38%	   | 64.64%	| 0.22%	 | 1.78% | 
-| 3.4497	| 3.6701	 | 25.06%	| 31.56%	   | 59.80%	| 28.22% | 8.66% | 
+| 1 | 4.9938 | 4.7167 | 25.77% | 64.29% | 0.00% | 0.83% |
+| 2 | 4.5832 | 4.7016 | 25.63% | 63.93% | 0.22% | 0.76% |
+| 3 | 4.4763 | 4.6836 | 26.46% | 65.85% | 0.11% | 0.96% |
+| 4 | 4.1575 | 3.9755 | 26.38% | 64.64% | 0.22% | 1.78% |
+| 5 | 3.4497 | 3.6701 | 31.56% | 59.80% | 28.22% | 8.66% |
 
+VQA accuracy is `min(matches/3, 1)` over the 10 human answers. Exact match (prediction equals the most common human answer) at epoch 5 was 25.06% (542 / 2,163).
 ## Run 2: main run
 - Images used: [ ]
 - Train questions: [ ] | Validation questions: [ ] | Skipped: [ ]
@@ -31,7 +32,7 @@ All numbers below are copied from the training logs. Nothing is estimated.
 | Epoch | Train loss | Val loss | Val accuracy | Yes/No | Number | Other |
 |---|---|---|---|---|---|---|
 
-## Final result (best epoch)
+## Final result (Run 1, epoch 5)
 - VQA accuracy: 31.56% | Exact match: 25.06% (542 / 2,163)
 - Yes/No: 59.80% | Number: 28.22% | Other: 8.66%
 - Accuracy rule used: [VQA accuracy min(matches/3, 1) / exact match]
