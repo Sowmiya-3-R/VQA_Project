@@ -419,7 +419,6 @@ def generate_fake_data(
     # 3. Synthesize 50 unique images with random 2048-dim feature vectors
     num_images = 50
     features_dict = {}
-    image_names = [f"fake_img_{i}.jpg" for i in range(num_images)]
     image_names = [f"COCO_train2014_{i:012d}.jpg" for i in range(num_images)]
     for img_name in image_names:
         features_dict[img_name] = torch.randn(1024, dtype=torch.float32)
@@ -526,7 +525,7 @@ def train_model(config: Dict[str, Any]):
             print(f"Loading validation questions from: {config['val_questions_path']}")
             raw_val_samples = load_raw_questions(config["val_questions_path"], config["val_annotations_path"])
             if config["val_features_path"]:
-                print(f"Loading validation image features from: {config['val_features_path']}")
+                #print(f"Loading validation image features from: {config['val_features_path']}")
                 val_features_dict = torch.load(config["val_features_path"], map_location="cpu")
                 if "features" in val_features_dict and "image_names" in val_features_dict:
                     val_feats = val_features_dict["features"]
