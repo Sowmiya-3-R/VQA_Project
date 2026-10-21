@@ -1,0 +1,2 @@
+Image,Question,Answer (top 5 with confidence),timestamp
+.gradio/flagged/Image/be7e8376605b574ddbf4/Screenshot 2026-10-20 at 9.21.24 PM.png,What colour is the cat?,"{""label"": ""day"", ""confidences"": [{""label"": ""day"", ""confidence"": 0.0003593533474486321}, {""label"": ""spinach"", ""confidence"": 0.0003557995078153908}, {""label"": ""bat"", ""confidence"": 0.00035553923225961626}, {""label"": ""shirt"", ""confidence"": 0.000354371644789353}, {""label"": ""bed"", ""confidence"": 0.00035419774940237403}]}",2026-10-21 01:57:46.404750
