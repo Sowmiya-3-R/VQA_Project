@@ -17,6 +17,7 @@ Contract:
 
 from typing import Union, List, Dict
 import torch
+import string
 
 # Reserved special tokens and their assigned integer IDs
 PAD_TOKEN = "<pad>"
@@ -39,7 +40,8 @@ def tokenize_text(text: str) -> List[str]:
     if not isinstance(text, str):
         text = str(text)
     # Lowercase and split purely on whitespace
-    return text.lower().strip().split()
+    text = text.lower().translate(str.maketrans('', '', string.punctuation))
+    return text.split()
 
 
 def encode_question(
