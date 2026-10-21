@@ -199,6 +199,10 @@ DRIVE_DIR = "/content/drive/MyDrive/VQA Project"
     --annotations "$DRIVE_DIR/dataset/v2_mscoco_train2014_annotations.json" \
     --vocab_out "$DRIVE_DIR/vocab.json" \
     --answers_out "$DRIVE_DIR/answers.json"
+#Output of build_vocab.py
+Dataset size (questions):            443,757
+Number of distinct answers:          22,531
+Questions answered by top 3000:     413,036 / 443,757 (93.08%)
 
 # Step 2: Train with disjoint image split or separate val2014
 !python train.py \
