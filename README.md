@@ -29,10 +29,22 @@ All components strictly honor the dimensional contract agreed upon with Person A
 
 ## 2. Installation
 
-Install required dependencies:
+Install required dependencies from the repo root:
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
+
+If you are already inside a virtual environment, use that environment instead of the system Python.
+
+To run the Gradio app from this repo, use the root file:
+```bash
+python app.py --checkpoint checkpoints/best_model.pt \
+             --vocab vocab.json \
+             --answers answers.json \
+             --projection projection.pt
+```
+
+The repo currently includes the model checkpoint under `checkpoints/`, but it does not include the real `vocab.json`, `answers.json`, and `projection.pt` files needed for a live inference run. You must generate or obtain those files before starting the app.
 
 ---
 
